@@ -1,0 +1,47 @@
+name: Automated Workflow for Copilot and ChatGPT
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  chatgpt_assist:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Generate ChatGPT Suggestions
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        npm install openai
+        node -e "const openai = require('openai'); /* Example Code for GPT */ console.log('ChatGPT Suggestions')"
+
+  copilot_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Run Unit Tests
+      run: npm test
+
+    - name: Run Copilot Linting
+      run: npm run lint
